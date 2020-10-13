@@ -1,29 +1,16 @@
-# Docker
-# Build a Docker image 
-# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+pool:
+  name: Azure Pipelines
+steps:
+- task: CopyFiles@2
+  displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
+  inputs:
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
-trigger:
-- master
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: drop'
 
-resources:
-- repo: self
-
-variables:
-  tag: '$(Build.BuildId)'
-
-stages:
-- stage: Build
-  displayName: Build image
-  jobs:  
-  - job: Build
-    displayName: Build
-    pool:
-      vmImage: 'ubuntu-latest'
-    steps:
-    - task: Docker@2
-      displayName: Build an image
-      inputs:
-        command: build
-        dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
-        tags: |
-          $(tag)
+- task: Docker@2
+  displayName: buildAndPush
+  inputs:
+    containerRegistry: DockerHub
+    repository: lokidata/gazpar
