@@ -2,7 +2,7 @@ version: "3.7"
 services:
   gazinflux:
     container_name: gazinflux
-    image: gazpar:latest
+    image: lokidata/gazpar:latest
     build:
       context: .
     restart: unless-stopped
@@ -13,6 +13,8 @@ services:
       - INFLUXDB_DATABASE=gazpar
       - INFLUXDB_USERNAME=username
       - INFLUXDB_PASSWORD=password
+      - REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+      - TZ=Europe/Paris
       # Optional:
       #- INFLUXDB_PORT=8086
       #- INFLUXDB_SSL=true
